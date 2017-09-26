@@ -7,7 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class GuiManager extends JFrame {
@@ -32,13 +32,16 @@ public class GuiManager extends JFrame {
 		
 		JPanel timeSectionsPane = new JPanel();
 		
-		JTextArea hoursArea = new JTextArea(1, 2);
+		JTextField hoursArea = new JTextField();
+		hoursArea.setColumns(2);
 		timeSectionsPane.add(hoursArea);
 		
-		JTextArea minutesArea = new JTextArea(1, 2);
+		JTextField minutesArea = new JTextField();
+		minutesArea.setColumns(2);
 		timeSectionsPane.add(minutesArea);
 		
-		JTextArea secondsArea = new JTextArea(1, 2);
+		JTextField secondsArea = new JTextField();
+		secondsArea.setColumns(2);
 		timeSectionsPane.add(secondsArea);
 		
 		root.add(timeSectionsPane);
@@ -58,6 +61,8 @@ public class GuiManager extends JFrame {
 		root.add(setTimerButton);
 		
 		setContentPane(root);
+		
+		pack();
 	}
 	
 	public void drawTimerProcessWindow() {
