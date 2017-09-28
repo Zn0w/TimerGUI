@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -32,15 +33,15 @@ public class GuiManager extends JFrame {
 		
 		JPanel timeSectionsPane = new JPanel();
 		
-		JTextField hoursArea = new JTextField();
+		JTextField hoursArea = new JTextField("0");
 		hoursArea.setColumns(2);
 		timeSectionsPane.add(hoursArea);
 		
-		JTextField minutesArea = new JTextField();
+		JTextField minutesArea = new JTextField("0");
 		minutesArea.setColumns(2);
 		timeSectionsPane.add(minutesArea);
 		
-		JTextField secondsArea = new JTextField();
+		JTextField secondsArea = new JTextField("0");
 		secondsArea.setColumns(2);
 		timeSectionsPane.add(secondsArea);
 		
@@ -50,12 +51,19 @@ public class GuiManager extends JFrame {
 		setTimerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int seconds = Integer.parseInt(hoursArea.getText()) * 3600 
-						+ Integer.parseInt(minutesArea.getText()) * 60
-						+ Integer.parseInt(secondsArea.getText());
+				if (isTimeFormatLegal(hoursArea.getText(), hoursArea.getText(), secondsArea.getText())) {
+					int seconds = toInteger(hoursArea.getText()) * 3600 
+						+ toInteger(hoursArea.getText()) * 60
+						+ toInteger(secondsArea.getText());
 				
-				timer = new Timer(seconds);
-				drawTimerProcessWindow();
+					timer = new Timer(seconds);
+					drawTimerProcessWindow();
+				}
+				else {
+					JOptionPane.showMessageDialog(GuiManager.this, "Use 0 - 24 for hours, 0 - 59"
+							+ " for minutes and seconds", "Illegal time format.", 
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		});
 		root.add(setTimerButton);
@@ -67,6 +75,25 @@ public class GuiManager extends JFrame {
 	
 	public void drawTimerProcessWindow() {
 		
+	}
+	
+	public int toInteger(String strFormat) {
+		if (strFormat.equals(""))
+			return 0;
+		else
+			return Integer.parseInt(strFormat);
+	}
+	
+	public boolean isTimeFormatLegal(String hours, String minutes, String seconds) {
+		try {
+			int h = Integer.parseInt(hours);
+			int m = Integer.parseInt(minutes);
+			int s = Integer.parseInt(seconds);
+			
+			return (h >= 0 && h <= 24) && (m >= 0 && m <= 59) && (s >=0 && s <=59);
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 	
 }
