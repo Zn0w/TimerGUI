@@ -2,28 +2,33 @@ package com.znow.timer;
 
 public class Timer implements Runnable {
 	
-	private int secondsLeft;
+	private int secondsLeft = 0;
 	
-	private boolean isRunning, isPaused;
-	
-	public Timer(int secondsLeft) {
-		this.secondsLeft = secondsLeft;
-	}
+	private boolean isRunning = false;
+	private boolean isPaused = false;
 	
 	public void startTimer() {
-		// Create new thread and start the timer
+		if (isRunning) {
+			return;
+		}
+		else {
+			isRunning = true;
+			
+			Thread timerThread = new Thread(this);
+			timerThread.start();
+		}
 	}
 	
 	public void pauseTimer() {
-		// Freeze timer counting
+		isPaused = true;
 	}
 	
 	public void unpauseTimer() {
-		// Unfreeze timer counting
+		isPaused = true;
 	}
 	
 	public void stopTimer() {
-		// Terminate the thread
+		isRunning = false;
 	}
 	
 	public String displayTimeLeft() {
@@ -40,6 +45,14 @@ public class Timer implements Runnable {
 		while (isRunning) {
 			if (isPaused)
 				continue;
+			
+			try {
+				Thread.sleep(998);
+				secondsLeft--;
+				System.out.println("Seconds left: " + secondsLeft);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

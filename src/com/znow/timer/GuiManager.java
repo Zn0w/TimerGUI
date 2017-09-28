@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class GuiManager extends JFrame {
 	
-	private Timer timer;
+	Timer timer = new Timer();
 	
 	public GuiManager() {
 		init();
@@ -53,10 +53,11 @@ public class GuiManager extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isTimeFormatLegal(hoursArea.getText(), hoursArea.getText(), secondsArea.getText())) {
 					int seconds = toInteger(hoursArea.getText()) * 3600 
-						+ toInteger(hoursArea.getText()) * 60
+						+ toInteger(minutesArea.getText()) * 60
 						+ toInteger(secondsArea.getText());
 				
-					timer = new Timer(seconds);
+					timer.setSecondsLeft(seconds);
+					timer.startTimer();
 					drawTimerProcessWindow();
 				}
 				else {
