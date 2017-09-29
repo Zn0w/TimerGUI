@@ -42,16 +42,17 @@ public class Timer implements Runnable {
 
 	@Override
 	public void run() {
+		long previousTime = System.currentTimeMillis();
+		long currentTime = 0;
+		
 		while (isRunning) {
 			if (isPaused)
 				continue;
 			
-			try {
-				Thread.sleep(998);
+			if (((currentTime = System.currentTimeMillis()) - previousTime) >= 1000) {
 				secondsLeft--;
+				previousTime = currentTime;
 				System.out.println("Seconds left: " + secondsLeft);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	}
