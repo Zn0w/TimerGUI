@@ -82,7 +82,9 @@ public class GuiManager extends JFrame {
 		root.add(currentTimeLabel);
 		
 		TimerCounter timerCounter = new TimerCounter(currentTimeLabel);
+		
 		Thread timeCounterThread = new Thread(timerCounter);
+		timeCounterThread.start();
 		
 		JPanel buttonPane = new JPanel();
 		
@@ -173,7 +175,6 @@ public class GuiManager extends JFrame {
 		public void run() {
 			while (isRunning) {
 				currentTimeLabel.setText(timer.displayTimeLeft());
-				setVisible(true);
 			}
 		}
 		
