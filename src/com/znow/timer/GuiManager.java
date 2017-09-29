@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -56,8 +57,7 @@ public class GuiManager extends JFrame {
 						+ toInteger(minutesArea.getText()) * 60
 						+ toInteger(secondsArea.getText());
 				
-					timer.setSecondsLeft(seconds);
-					timer.startTimer();
+					timer.setSecondSettings(seconds);
 					drawTimerProcessWindow();
 				}
 				else {
@@ -75,7 +75,69 @@ public class GuiManager extends JFrame {
 	}
 	
 	public void drawTimerProcessWindow() {
+		JPanel root = new JPanel();
+		root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
 		
+		JLabel currentTimeLabel = new JLabel(timer.displayTimeLeft());
+		root.add(currentTimeLabel);
+		
+		TimerCounter timerCounter = new TimerCounter(currentTimeLabel);
+		Thread timeCounterThread = new Thread(timerCounter);
+		
+		JPanel buttonPane = new JPanel();
+		
+		JButton startButton = new JButton("Start");
+		startButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				timer.startTimer();
+			}
+		});
+		buttonPane.add(startButton);
+		
+		JButton pauseButton = new JButton("Pause");
+		pauseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				timer.pauseTimer();
+			}
+		});
+		buttonPane.add(pauseButton);
+		
+		JButton unpauseButton = new JButton("Unpause");
+		unpauseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				timer.unpauseTimer();
+			}
+		});
+		buttonPane.add(unpauseButton);
+		
+		JButton stopButton = new JButton("Stop");
+		stopButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				timer.stopTimer();
+			}
+		});
+		buttonPane.add(stopButton);
+		
+		root.add(buttonPane);
+		
+		JButton changeButton = new JButton("Change time settings");
+		changeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				timer.stopTimer();
+				timerCounter.isRunning = false;
+				drawSetTimerWindow();
+			}
+		});
+		root.add(changeButton);
+		
+		setContentPane(root);
+		
+		pack();
 	}
 	
 	public int toInteger(String strFormat) {
@@ -95,6 +157,26 @@ public class GuiManager extends JFrame {
 		} catch (NumberFormatException e) {
 			return false;
 		}
+	}
+	
+	private class TimerCounter implements Runnable {
+
+		private JLabel currentTimeLabel;
+		private boolean isRunning;
+		
+		private TimerCounter(JLabel currentTimeLabel) {
+			this.currentTimeLabel = currentTimeLabel;
+			isRunning = true;
+		}
+		
+		@Override
+		public void run() {
+			while (isRunning) {
+				currentTimeLabel.setText(timer.displayTimeLeft());
+				setVisible(true);
+			}
+		}
+		
 	}
 	
 }

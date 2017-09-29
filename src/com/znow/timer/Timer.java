@@ -2,6 +2,7 @@ package com.znow.timer;
 
 public class Timer implements Runnable {
 	
+	private int secondSettings = 0;
 	private int secondsLeft = 0;
 	
 	private boolean isRunning = false;
@@ -14,6 +15,8 @@ public class Timer implements Runnable {
 		else {
 			isRunning = true;
 			
+			secondsLeft = secondSettings;
+			
 			Thread timerThread = new Thread(this);
 			timerThread.start();
 		}
@@ -24,20 +27,22 @@ public class Timer implements Runnable {
 	}
 	
 	public void unpauseTimer() {
-		isPaused = true;
+		if (isRunning)
+			isPaused = false;
+		else return;
 	}
 	
 	public void stopTimer() {
 		isRunning = false;
+		isPaused = false;
 	}
 	
 	public String displayTimeLeft() {
-		// Return string of time left in format: hh:mm:ss
-		return null;
+		return String.valueOf(secondsLeft);
 	}
 	
-	public void setSecondsLeft(int secondsLeft) {
-		this.secondsLeft = secondsLeft;
+	public void setSecondSettings(int secondSettings) {
+		this.secondSettings = secondSettings;
 	}
 
 	@Override
@@ -52,7 +57,7 @@ public class Timer implements Runnable {
 			if (((currentTime = System.currentTimeMillis()) - previousTime) >= 1000) {
 				secondsLeft--;
 				previousTime = currentTime;
-				System.out.println("Seconds left: " + secondsLeft);
+				System.out.println(secondsLeft);
 			}
 		}
 	}
